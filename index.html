@@ -225,21 +225,20 @@
     if(music.paused){ try{ await music.play(); }catch{} }
   });
 
-  // RSVP → kirim ke WhatsApp (tanpa nomor: user pilih kontak)
-  document.getElementById('rsvpForm').addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const nama = document.getElementById('nama').value.trim();
-    const status = document.getElementById('status').value;
-    const jumlah = document.getElementById('jumlah').value;
-    const msg =
+  // RSVP → kirim ke WhatsApp (langsung ke nomor abang)
+document.getElementById('rsvpForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const nama = document.getElementById('nama').value.trim();
+  const status = document.getElementById('status').value;
+  const jumlah = document.getElementById('jumlah').value;
+  const msg =
 `Konfirmasi Kehadiran — Rahmat & Nabila
 Nama: ${nama}
 Status: ${status}
 Jumlah Tamu: ${jumlah}`;
-    const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
-    window.open(waUrl, '_blank');
-  });
-
+  const waUrl = `https://wa.me/6285657228559?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, '_blank');
+});
   // default: sembunyikan semua layer saat load
   document.addEventListener('DOMContentLoaded', ()=>{
     layers.forEach(el=>el.classList.remove('show'));
