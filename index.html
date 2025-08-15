@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Undangan Digital</title>
+<style>
+  :root{
+    --bg:#faf5ef; --ink:#222; --accent:#6b4e3d; --card:#ffffffdd;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); overflow-x:hidden;
+  }
+  .wrap{max-width:720px;margin:0 auto;min-height:100%;position:relative}
+  /* tombol besar tengah */
+  #open{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(ellipse at center, #fff8 0%, #fff0 60%),
+               url('bg.jpg') center/cover no-repeat, var(--bg);
+    z-index:50;
+  }
+  #open button{
+    padding:16px 28px; font-size:20px; border:0; border-radius:14px;
+    background:var(--accent); color:#fff; box-shadow:0 10px 30px #0002; cursor:pointer;
+  }
+  #open button:active{transform:translateY(1px)}
+  /* layer berlapis */
+  .layer{
+    opacity:0; transform:translateY(12px); pointer-events:none;
+    transition:opacity .5s ease, transform .5s ease;
+    padding:20px;
+  }
+  .layer.show{opacity:1; transform:none; pointer-events:auto}
+  .card{
+    background:var(--card); backdrop-filter:blur(6px);
+    border-radius:18px; padding:22px; box-shadow:0 10px 30px #0001;
+  }
+  h1{margin:0 0 8px;font-size:28px}
+  h2{margin:0 0 6px;font-size:22px}
+  p{margin:8px 0; line-height:1.6}
+  .hero{
+    width:100%; border-radius:16px; display:block; margin:12px 0 6px 0;
+  }
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    padding:12px 16px; border-radius:12px; border:1px solid #00000015;
+    background:#fff; cursor:pointer;
+  }
+  .btn.primary{background:var(--accent); color:#fff; border-color:transparent}
+  .footer{font-size:12px; color:#666; text-align:center; padding:24px 12px 32px}
+  /* nav step */
+  .step{font-size:13px; color:#666; text-align:center; margin:10px 0}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- LAYER 0: splash / buka undangan -->
+  <div id="open">
+    <button id="openBtn">Buka Undangan</button>
+  </div>
+
+  <!-- LAYER 1: Amplop -->
+  <section id="layer1" class="layer">
+    <div class="card">
+      <h1>Untuk: Tamu Istimewa</h1>
+      <p class="step">Langkah 1/4</p>
+      <img src="cover.jpg" alt="Amplop" class="hero">
+      <p>Dengan hormat, kami mengundang Anda untuk hadir di momen terbaik kami.</p>
+      <div class="actions">
+        <button class="btn primary" data-next="layer2">Buka Amplop</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAYER 2: Kartu Utama -->
+  <section id="layer2" class="layer">
+    <div class="card">
+      <h2>Rahmat & Salma</h2>
+      <p class="step">Langkah 2/4</p>
+      <img src="couple.jpg" alt="Kami" class="hero">
+      <p><em>“Di dunia yang sibuk membalas luka, tetaplah jadi jiwa yang teduh dan bijaksana,
+      cukup berkaca... lalu membenahi diri tanpa menyakiti siapa-siapa.”</em></p>
+      <div class="actions">
+        <button class="btn" data-prev="layer1">Kembali</button>
+        <button class="btn primary" data-next="layer3">Lihat Detail Acara</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAYER 3: Detail Acara -->
+  <section id="layer3" class="layer">
+    <div class="card">
+      <h2>Detail Acara</h2>
+      <p class="step">Langkah 3/4</p>
+      <p><strong>Akad</strong><br>Sabtu, 20 September 2025 • 09.00 WITA<br>Masjid Al-Ikhlas</p>
+      <p><strong>Resepsi</strong><br>Sabtu, 20 September 2025 • 19.00 WITA<br>Gedung Harmoni</p>
+      <div class="actions">
+        <a class="btn" href="https://maps.google.com" target="_blank" rel="noopener">Lihat Peta</a>
+        <button class="btn primary" data-next="layer4">Ke Galeri</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAYER 4: Galeri & RSVP -->
+  <section id="layer4" class="layer">
+    <div class="card">
+      <h2>Galeri</h2>
+      <p class="step">Langkah 4/4</p>
+      <img src="gallery1.jpg" alt="Galeri 1" class="hero">
+      <img src="gallery2.jpg" alt="Galeri 2" class="hero">
+      <div class="actions">
+        <a class="btn primary" href="https://forms.gle/" target="_blank" rel="noopener">Konfirmasi Kehadiran</a>
+        <button class="btn" data-prev="layer3">Kembali</button>
+      </div>
+    </div>
+    <div class="footer">Terima kasih atas doa & kehadirannya 🤍</div>
+  </section>
+
+</div>
+
+<!-- audio diputar setelah klik pertama -->
+<audio id="music" src="musiksad02.mp3" loop></audio>
+
+<script>
+  const music = document.getElementById('music');
+  const openOverlay = document.getElementById('open');
+  const openBtn = document.getElementById('openBtn');
+  const layers = ['layer1','layer2','layer3','layer4'].map(id=>document.getElementById(id));
+
+  // util tampil layer
+  function show(idToShow){
+    layers.forEach(el=>{
+      if(el.id===idToShow){ el.classList.add('show'); }
+      else{ el.classList.remove('show'); }
+    });
+    // scroll ke atas tiap ganti layer (biar nyaman di HP)
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // klik pertama: play musik + buka layer 1
+  openBtn.addEventListener('click', async ()=>{
+    try{ await music.play(); }catch(e){ /* jika gagal, user bisa klik lagi tombol lain */ }
+    openOverlay.style.display='none';
+    show('layer1');
+  });
+
+  // delegasi tombol next/prev
+  document.addEventListener('click', async (e)=>{
+    const t = e.target.closest('[data-next],[data-prev]');
+    if(!t) return;
+    if(t.dataset.next){ show(t.dataset.next); }
+    if(t.dataset.prev){ show(t.dataset.prev); }
+    // pastikan musik sudah play (kalau user pertama kliknya bukan tombol Buka)
+    if(music.paused){ try{ await music.play(); }catch{} }
+  });
+
+  // tampilkan layer awal kalau JS aktif (fallback)
+  document.addEventListener('DOMContentLoaded', ()=> layers.forEach(el=>el.classList.remove('show')));
+</script>
+</body>
+</html>
