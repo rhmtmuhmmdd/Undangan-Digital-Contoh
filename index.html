@@ -1,112 +1,249 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Rahmat & Nabila</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f9f3f3;
-            text-align: center;
-            overflow-x: hidden;
-        }
-        .slide {
-            display: none;
-            height: 100vh;
-            padding: 40px;
-            box-sizing: border-box;
-        }
-        .active {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 1s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #b85c5c;
-        }
-        p {
-            font-size: 1.2em;
-            max-width: 600px;
-            line-height: 1.5;
-        }
-        button {
-            margin-top: 20px;
-            padding: 10px 25px;
-            background-color: #b85c5c;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #a14e4e;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rahmat & Nabila — Undangan</title>
+<style>
+  :root{
+    --bg1:#fff6f6; --bg2:#fffaf1;
+    --ink:#2c2a29; --muted:#6b6b6b;
+    --accent:#b86b77; --accent2:#e7b8c4;
+    --card:#ffffffcc;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    color:var(--ink);
+    background: radial-gradient(1200px 700px at 20% 10%, var(--bg1), transparent),
+                radial-gradient(1200px 700px at 80% 90%, var(--bg2), transparent),
+                #fff;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:780px;margin:0 auto;min-height:100%;position:relative;padding:20px}
+
+  /* ====== COVER ====== */
+  #cover{
+    position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; z-index:50;
+    background:
+      linear-gradient(#00000040,#00000040),
+      url('cover.jpg') center/cover no-repeat,
+      radial-gradient(circle at 50% 50%, #fff, #fff0);
+    color:#fff;
+    padding:24px;
+  }
+  #cover .names{font-size:42px; letter-spacing:.5px; margin:0 0 8px; font-weight:700}
+  #cover .date{opacity:.95; font-size:15px; margin:0 0 18px}
+  #openBtn{
+    padding:14px 28px; border:0; border-radius:999px; cursor:pointer;
+    background: linear-gradient(135deg, var(--accent), #a45363);
+    color:#fff; font-size:18px; box-shadow:0 12px 30px #0005;
+    transition: transform .15s ease;
+    animation: pulse 2s infinite ease-in-out;
+  }
+  #openBtn:active{transform:scale(.98)}
+  @keyframes pulse{0%,100%{box-shadow:0 10px 28px #0004}50%{box-shadow:0 14px 36px #0006}}
+
+  /* ====== LAYERS ====== */
+  .layer{
+    opacity:0; transform:translateY(14px) scale(.995); pointer-events:none;
+    transition:opacity .5s ease, transform .5s ease;
+    padding:16px; margin:18px 0;
+  }
+  .layer.show{opacity:1; transform:none; pointer-events:auto}
+  .card{
+    background:var(--card); backdrop-filter:blur(6px);
+    border-radius:22px; padding:24px; box-shadow:0 12px 36px #00000014;
+  }
+  h1,h2,h3{margin:0 0 10px}
+  h1{font-size:28px}
+  h2{font-size:24px}
+  p{margin:10px 0; line-height:1.7}
+  .verse{font-style:italic; color:#444; background:#ffffffaa; border-left:4px solid var(--accent); padding:14px 16px; border-radius:12px}
+  .muted{color:var(--muted)}
+  .hr{height:1px;background:#00000010;margin:16px 0;border-radius:1px}
+
+  /* buttons */
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+  .btn{
+    padding:12px 16px; border-radius:12px; border:1px solid #00000018;
+    background:#fff; cursor:pointer; font: inherit;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--accent),#a45363); color:#fff; border-color:transparent}
+  .btn.ghost{background:#fff; color:var(--ink)}
+  .btn:active{transform:translateY(1px)}
+
+  /* gallery */
+  .gallery{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
+  .gallery img{width:100%; height:220px; object-fit:cover; border-radius:14px; background:#f3f3f3}
+
+  /* form RSVP */
+  form{display:grid; gap:10px; margin-top:8px}
+  input, select{
+    padding:12px 14px; border-radius:10px; border:1px solid #00000020; background:#fff; font:inherit;
+  }
+
+  .footer{font-size:12px; color:#777; text-align:center; padding:28px 8px 36px}
+</style>
 </head>
 <body>
 
-    <!-- Musik -->
-    <audio id="bgMusic" loop>
-        <source src="download.mp3" type="audio/mpeg">
-    </audio>
+<div class="wrap">
 
-    <!-- Slide 1: Cover -->
-    <div class="slide active">
-        <h1>Rahmat & Nabila</h1>
-        <p>Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Anda untuk hadir dalam acara pernikahan kami.</p>
-        <button onclick="nextSlide()">Mulai Membaca</button>
+  <!-- ========= COVER / LAYER 0 ========= -->
+  <section id="cover" aria-label="Pembuka">
+    <div class="names">Rahmat & Nabila</div>
+    <div class="date">Tahun 2029</div>
+    <button id="openBtn">Buka Undangan</button>
+  </section>
+
+  <!-- ========= LAYER 1: AYAT ========= -->
+  <section id="layer1" class="layer">
+    <div class="card">
+      <h1>Assalamu’alaikum Wr. Wb.</h1>
+      <p class="verse">
+        “Dan di antara tanda-tanda kebesaran-Nya, Dia menciptakan untukmu pasangan dari jenismu sendiri,
+        agar kamu merasa tenteram, dan Dia menjadikan di antaramu rasa kasih dan sayang.”
+        <br><strong>(QS. Ar-Rum: 21)</strong>
+      </p>
+      <p class="muted">Dengan memohon rahmat Allah SWT, kami bermaksud menyelenggarakan pernikahan kami.</p>
+      <div class="actions">
+        <button class="btn" data-next="layer2">Lanjut</button>
+      </div>
     </div>
+  </section>
 
-    <!-- Slide 2: Ayat -->
-    <div class="slide">
-        <p><i>“Dan di antara tanda-tanda kebesaran-Nya, Dia menciptakan untukmu pasangan dari jenismu sendiri, agar kamu merasa tenteram, dan Dia menjadikan di antaramu rasa kasih dan sayang.”</i> <br> (QS. Ar-Rum: 21)</p>
-        <button onclick="nextSlide()">Lanjut</button>
+  <!-- ========= LAYER 2: AKAD ========= -->
+  <section id="layer2" class="layer">
+    <div class="card">
+      <h2>Akad Nikah</h2>
+      <p>📍 <strong>Masjid Al-Markaz Al-Islami Makassar</strong></p>
+      <p>🗓️ <strong>20 September 2029</strong></p>
+      <div class="actions">
+        <a class="btn ghost" href="https://maps.app.goo.gl/85MQ5xDWu7B7xVqM6?g_st=ac" target="_blank" rel="noopener">📍 Buka Peta</a>
+        <button class="btn primary" data-next="layer3">Lanjut</button>
+      </div>
     </div>
+  </section>
 
-    <!-- Slide 3: Akad -->
-    <div class="slide">
-        <h2>Akad Nikah</h2>
-        <p>📍 Masjid Al-Markaz Al-Islami Makassar</p>
-        <p>🗓️ Tanggal: [Isi Tanggal]</p>
-        <p>⏰ Waktu: [Isi Jam]</p>
-        <button onclick="nextSlide()">Lanjut</button>
+  <!-- ========= LAYER 3: RESEPSI ========= -->
+  <section id="layer3" class="layer">
+    <div class="card">
+      <h2>Resepsi</h2>
+      <p>📍 <strong>Gedung Al-Markaz Al-Islami Makassar</strong></p>
+      <p>🗓️ <strong>20 September 2029</strong></p>
+      <div class="actions">
+        <a class="btn ghost" href="https://maps.app.goo.gl/85MQ5xDWu7B7xVqM6?g_st=ac" target="_blank" rel="noopener">📍 Buka Peta</a>
+        <button class="btn primary" data-next="layer4">Lanjut</button>
+      </div>
     </div>
+  </section>
 
-    <!-- Slide 4: Resepsi -->
-    <div class="slide">
-        <h2>Resepsi</h2>
-        <p>📍 Gedung Al-Markaz Al-Islami Makassar</p>
-        <p>🗓️ Tanggal: [Isi Tanggal]</p>
-        <p>⏰ Waktu: [Isi Jam]</p>
-        <button onclick="nextSlide()">Selesai</button>
+  <!-- ========= LAYER 4: GALERI ========= -->
+  <section id="layer4" class="layer">
+    <div class="card">
+      <h2>Galeri Foto</h2>
+      <p class="muted">Sedikit potret perjalanan kami.</p>
+      <div class="gallery">
+        <img src="gallery1.jpg" alt="Galeri 1">
+        <img src="gallery2.jpg" alt="Galeri 2">
+        <img src="gallery3.jpg" alt="Galeri 3">
+        <img src="gallery4.jpg" alt="Galeri 4">
+      </div>
+      <div class="actions">
+        <button class="btn" data-prev="layer3">Kembali</button>
+        <button class="btn primary" data-next="layer5">Lanjut</button>
+      </div>
     </div>
+  </section>
 
-    <!-- Script untuk Navigasi -->
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const music = document.getElementById('bgMusic');
+  <!-- ========= LAYER 5: KONFIRMASI ========= -->
+  <section id="layer5" class="layer">
+    <div class="card">
+      <h2>Konfirmasi Kehadiran</h2>
+      <p class="muted">Mohon konfirmasi kehadiran Anda agar kami dapat menyiapkan yang terbaik.</p>
 
-        function nextSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide++;
-            if (currentSlide < slides.length) {
-                slides[currentSlide].classList.add('active');
-                if (currentSlide === 1) { // mulai musik setelah klik pertama
-                    music.play();
-                }
-            }
-        }
-    </script>
+      <form id="rsvpForm">
+        <input type="text" id="nama" placeholder="Nama lengkap" required>
+        <select id="status" required>
+          <option value="" disabled selected>Pilih status</option>
+          <option>Hadir</option>
+          <option>Tidak bisa hadir</option>
+        </select>
+        <input type="number" id="jumlah" min="1" step="1" placeholder="Jumlah tamu (mis. 2)" required>
+        <button type="submit" class="btn primary">Kirim Konfirmasi via WhatsApp</button>
+      </form>
+
+      <div class="hr"></div>
+      <p class="muted" style="text-align:center">Terima kasih atas doa dan restunya 🤍</p>
+
+      <div class="actions">
+        <button class="btn" data-prev="layer4">Kembali</button>
+      </div>
+    </div>
+    <div class="footer">© 2029 Rahmat & Nabila</div>
+  </section>
+
+</div>
+
+<!-- ====== AUDIO ====== -->
+<audio id="music" src="download.mp3" loop></audio>
+
+<script>
+  const music = document.getElementById('music');
+  const cover = document.getElementById('cover');
+  const openBtn = document.getElementById('openBtn');
+  const layers = ['layer1','layer2','layer3','layer4','layer5'].map(id=>document.getElementById(id));
+
+  // tampil layer tertentu
+  function show(id){
+    layers.forEach(el => { el.classList.toggle('show', el.id === id); });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // klik "Buka Undangan": play musik + buka layer pertama
+  openBtn.addEventListener('click', async ()=>{
+    try { await music.play(); } catch(e){
+      // kalau gagal auto-play (kebijakan browser), user akan tetap bisa mulai musik saat klik tombol berikutnya
+      console.warn('Autoplay ditolak, musik akan dicoba lagi saat klik berikutnya.');
+    }
+    cover.style.display = 'none';
+    show('layer1');
+  });
+
+  // delegasi tombol Next/Prev antar layer
+  document.addEventListener('click', async (e)=>{
+    const t = e.target.closest('[data-next],[data-prev]');
+    if(!t) return;
+    if(t.dataset.next) show(t.dataset.next);
+    if(t.dataset.prev) show(t.dataset.prev);
+    // pastikan musik mencoba play jika sebelumnya gagal
+    if(music.paused){ try{ await music.play(); }catch{} }
+  });
+
+  // RSVP → kirim ke WhatsApp (tanpa nomor: user pilih kontak)
+  document.getElementById('rsvpForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const nama = document.getElementById('nama').value.trim();
+    const status = document.getElementById('status').value;
+    const jumlah = document.getElementById('jumlah').value;
+    const msg =
+`Konfirmasi Kehadiran — Rahmat & Nabila
+Nama: ${nama}
+Status: ${status}
+Jumlah Tamu: ${jumlah}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, '_blank');
+  });
+
+  // default: sembunyikan semua layer saat load
+  document.addEventListener('DOMContentLoaded', ()=>{
+    layers.forEach(el=>el.classList.remove('show'));
+  });
+</script>
+</body>
+</html>    </script>
 </body>
 </html>
